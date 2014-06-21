@@ -1,0 +1,563 @@
+%\documentclass[pdf]{beamer}
+%set BIBINPUTS=.;../../bibFiles;;
+\documentclass{beamer}
+\mode<presentation>{}
+\usepackage{beamerthemeshadow}
+\usepackage[utf8]{inputenc}
+\usepackage{listings,xcolor}
+
+
+\usepackage{moreverb}
+\usepackage{ulem}
+\usepackage{soul}
+%\usepackage{algorithmicx}
+%\usepackage{algpseudocode}
+\usepackage{pseudocode}
+\usepackage{hyperref}
+% \usepackage{color}
+% \definecolor{light}{gray}{.80}
+% \usepackage{graphicx}
+% \usepackage{amsfonts}
+% \usepackage{amsmath}
+% \usepackage{amssymb}
+% \usepackage{amsthm}
+% \usepackage{algorithmicx}
+% %\usepackage{program}
+% \usepackage{rotating}
+\usepackage{ulem}
+\usepackage{authordate1-4}
+\input{someNewCommands}
+\begin{document}
+\title[Symbolic Algebra Code Generation]{\dsgecg: An Application of Symbolic Algebra to DSGE Estimation Code Generation}
+\subtitle{this is a subtitle}
+
+
+\author{Gary S. Anderson}
+\date{\today} 
+
+
+\frame{\titlepage}
+
+
+
+
+\begin{frame}{XML }
+
+  \begin{itemize}
+  \item Model Definition Language
+  \item Tool Application Language
+  \end{itemize}
+
+  
+\end{frame}
+
+\begin{frame}
+  \frametitle{C Code Generation}
+  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Fortran Code Generation}
+  
+\end{frame}
+
+\begin{frame}
+  \frametitle{GPU Code Generation}
+  
+\end{frame}
+
+
+
+  \section{Problem Statement and Algorithm}
+
+
+\begin{frame}
+  \frametitle{Problem Statement and Algorithm}
+  
+  
+
+Consider linear models of the form:
+
+
+\begin{gather}
+\sum_{i=-\tau}^\theta{H_i x_{t+i}}= \Psi%\nonumber
+z_{t}, \,\, t = 0,\ldots,\infty\label{eq:canonical}\\ \intertext{with initial conditions, if any, given by constraints of the form}%\nonumber
+x_i  =  x^{data}_i,  i =  - \tau, \ldots, -1\label{eq:init}\\ \intertext{where both $\tau$ and $\theta$ are non-negative, and $x_t$ is an L dimensional vector 
+of endogenous variables with}%\nonumber
+\lim_{ t \rightarrow\infty} \|x_t\|   < \infty\label{eq:limit} %\nonumber
+\end{gather}
+{ and $z_t$ is a $k$ dimensional vector of exogenous variables.}
+
+\end{frame}
+
+
+
+
+\begin{frame}
+The solution methodology entails 
+Manipulating the left hand side of equation~\ref{eq:canonical} to obtain
+ a state space transition matrix, $A$, along with
+a set of auxiliary initial conditions, $Z$ for the homogeneous solution.
+\begin{gather}
+  Z
+  \begin{bmatrix}
+    x_{-\tau}\\ \vdots \\ x_{\theta}
+  \end{bmatrix}=0 \,\,\,\,\text{and}\,   \begin{bmatrix}
+    x_{-\tau+1}\\ \vdots \\ x_{\theta}
+  \end{bmatrix}
+=A   \begin{bmatrix}
+    x_{-\tau}\\ \vdots \\ x_{\theta-1}
+  \end{bmatrix}
+\end{gather}
+See Section~\ref{sec:arzgev}.
+\end{frame}
+\begin{frame}
+
+
+ Computing the eigenvalues and vectors spanning 
+the left invariant space associated with
+large eigenvalues. 
+\begin{gather}
+ V A =   \mathcal{M}  V 
+\end{gather}
+with the eigenvalues of $ \mathcal{M}$ all greater than one in absolute value.
+See Section~\ref{asymQ}.
+\end{frame}
+\begin{frame}
+
+
+ Assembling asymptotic
+constraints, $Q$, (See Section~\ref{asymQ}.)  by combining the:
+  \begin{enumerate}
+\item  auxiliary initial conditions identified in the computation of the transition matrix and 
+\item the invariant space vectors
+  \end{enumerate}
+\begin{gather}
+  Q= 
+  \begin{bmatrix}
+    Z\\V
+  \end{bmatrix}
+\end{gather}
+See Section~\ref{asymQ}.
+\end{frame}
+\begin{frame}
+ Investigating the rank of the linear space spanned by these asymptotic
+constraints and,  when a unique solution exists, 
+\begin{enumerate}
+\item Computing the auto-regressive 
+representation, $B$. See Section~\ref{conar}.
+\item Computing matrices, $\phi, F, \vartheta$ 
+for characterizing the impact of the inhomogeneous
+right hand side term. See Section~\ref{sec:inhomog}.
+
+\end{enumerate}
+\end{frame}
+
+
+
+\begin{frame}
+  \frametitle{Anderson Moore Algorithm Components}
+  \begin{itemize}
+  \item Package AccelerateAMA` \href{https://github.com/es335mathwiz/AccelerateAMA.git}{on gitHub}
+
+\cite{anderson10}
+
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  
+  \subsection{A Simple Example}
+Consider the model given by
+  \begin{gather*}
+    (1+r)v_t=v_{t+1}+ d_{t+1}\\
+d_t=(1-\delta)d_{t-1}, \intertext{with} 0<r,\delta<1\\ \intertext{To apply the algorithms define}
+x=
+\begin{bmatrix}
+  d_t\\v_t
+\end{bmatrix}\,\,\,
+H=
+\begin{bmatrix}
+  0&0&(1+r)&0&-1&-1\\ 0&-(1-\delta)&0&1&0&0
+\end{bmatrix} 
+\end{gather*}
+
+\end{frame}
+
+\begin{frame}
+  
+  \subsection{Transition Matrix and Auxiliary Initial
+    Conditions}
+
+
+\begin{gather*}
+\intertext{The symbolic algebra implementation  computes the symbolic matrices}
+Z=\begin{bmatrix}
+ 0&-(1-\delta)&0&1  
+\end{bmatrix},
+A=\begin{bmatrix}
+0& 0& 1& 0\\0& 0& 0& 1\\ 0& 0& 1 + r&  \delta-1\\ 0& 0& 0& 1 - \delta
+\end{bmatrix}
+  \end{gather*}
+
+
+\end{frame}
+
+
+
+    \begin{frame}
+  \frametitle{Eigenvalues and Eigenvectors}
+ Two Simplifications facilitate the calculation
+
+
+ Reduction in the dimension of A before computing eigenvalues
+      \begin{gather*}
+        A=
+        \begin{bmatrix}
+0& 0& 1& 0\\0& 0& 0& 1\\ 0& 0& 1 + r&  \delta-1\\ 0& 0& 0& 1 - \delta
+        \end{bmatrix}
+\rightarrow  a =
+\begin{bmatrix}
+1 + r& \delta-1\\0& 1 - \delta
+\end{bmatrix} \intertext{The symbolic algebra implementation  computes the two symbolic eigenvalues}
+\lambda_S=1-\delta,\lambda_L=1+r
+      \end{gather*}
+      \end{frame}
+
+      \begin{frame}
+        
+ and computing only the left eigenvector associated with the single large root
+      \begin{gather*} \intertext{The symbolic algebra implementation  computes the left eigenvector, e}
+    NullSpace(    a^T-\lambda_L I) \rightarrow v=
+      \begin{bmatrix}
+                   \frac{\delta +r}{\delta -1} & 1        
+      \end{bmatrix}
+\intertext{ from which it is easy to construct the left eigenvector for $A$}
+V=      \begin{bmatrix}
+                  0&0& \frac{\delta +r}{\delta -1} & 1        
+      \end{bmatrix}
+      \end{gather*}
+    \end{frame}
+
+
+
+  \subsection{Assembling the Constraints and Computing the
+    Autoregressive Representation}
+ \begin{frame}
+The symbolic algebra implementation  combines the constraints
+    \begin{gather*}
+      Q=
+      \begin{bmatrix}
+        Z\\V
+      \end{bmatrix}=
+      \begin{bmatrix}
+         0&-(1-\delta)&0&1  \\
+0&0&                   \frac{\delta +r}{\delta -1} & 1        
+      \end{bmatrix}
+    \end{gather*}
+ The symbolic algebra implementation  computes the autoregressive representation
+    \begin{gather*}
+Q=
+\begin{bmatrix}
+  Q_L&Q_R
+\end{bmatrix}=
+\begin{bmatrix}
+         0&-(1-\delta)&0&1  \\
+0&0&                   \frac{\delta +r}{\delta -1} & 1        
+\end{bmatrix} \intertext{leads to }
+      B=
+      \begin{bmatrix}
+0& \frac{(\delta-1 )^2}{\delta + r}\\0& 1- \delta
+      \end{bmatrix},
+\phi=
+\left(
+                 \begin{array}{cc}
+                  \frac{1}{\text{r}+1} & \frac{1-\delta }{\delta +\text{r}} \\
+                  0 & 1
+                 \end{array}
+                 \right),
+F=\left(
+                 \begin{array}{cc}
+                  \frac{1}{\text{r}+1} & \frac{1}{\text{r}+1} \\
+                  0 & 0
+                 \end{array}
+                 \right)
+    \end{gather*}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Practicality}
+    To assess the practicality of obtaining symbolic solutions, I developed
+    \begin{itemize}
+    \item a Mathematica/Java program that
+    \item reads  Dynare 4.2 models, gleans the equations,  parameters, 
+variables and   initial values for parameters and
+\item 
+applies the symbolic algebra algoritims to compute analytic 
+autoregressive solutions for the model.
+\item For nonlinear models, the Mathematica  code attempts to symbolically computes 
+steady states. The code
+\item linearizes non-linear models using either the symbolic solution or a 
+symbolic representation of a non-analytic steady state value.
+\end{itemize}
+\end{frame}
+\begin{frame}
+\begin{itemize}
+\item I apply this program to a collection of representative models taken from 
+\href{http://www.dynare.org/documentation-and-support/faq/basics}{the Dynare distribution,}
+\href{http://www.nviegi.net/research/dsge.htm}{``Modelling and Simulating DSGE Models with Dynare in Octave'' by Nicola Viegis} and 
+\href{http://homepages.nyu.edu/~ts43/research/AP_tom16.pdf}{``Practicing Dynare''\cite{bhandari10}}
+    \end{itemize}
+  \end{frame}
+
+  \begin{frame}
+
+    \subsection{The Models }
+As shown in table \ref{tab:noEst} the models vary in size and in the number of parameters used in their
+definition. Some of the models are nonlinear.
+
+%\input{../code/modDims.tex}
+
+  These nonlinear solutions have place holders for the steady state value.
+The Mathematica code linearizes nonlinear models about a symbolic steady state.
+Table \ref{tab:preEvalTimes} presents computation times for the steps
+preceeding the eigenvalue calculations.
+The symbolic algebra programs can deliver analytic solutions for
+each of the transition matrices. This includes 17 equation ifsi and and 14 equation fs2000ns which required
+about 3 minutes and a one half minute respectively. All the other models required less than a second.
+
+
+
+%\input{../code/preEvalTimes.tex}
+
+
+
+Symbolic algebra techniques deliver complete 
+analytic solutions for each of the linear
+models except for the BGGViegi model. 
+I set a maximum of ???one hour??? for each stage of the computation.
+For the BGGViegi model, the Eigenvector computation 
+step took more than an hour before aborting this and each of the subsequent 
+steps.  
+The machine is a 2.93GHz  24 core
+Intel(R) Xeon(R) CPU.\footnote{(peaklx13)}
+
+%\input{../code/ssSolnTimes.tex}
+
+%\input{../code/allCompTimes.tex}
+
+Table \ref{tab:linCompTimes} presents the time required to compute analytic 
+solutions. 
+The second column presents the time to compute the state space 
+transistion matrix, A. Column three presents the time required to determine
+the eigenvalues and eigenvectors that help characterize the asymptotic
+constraint matrix, Q. The fifth column presents the time required to
+compute the B matrix characterizing the linear rational expectation  model
+solution.  The sixth column characterizes the time required to compute
+the observable structure matrix, S.  
+
+FindRoot uses random numbers for variables not given by symbolic expression.
+On rare occasion these do not converge except for ifs1 and fs2000
+ which often has convergence problems. 
+FindRoot solution times were always trivially small.
+
+%\input{../code/linearCompTimes.tex}
+
+Table \ref{tab:linMexTime} reports the number of seconds required for 1000 evaluations of
+the matlab implementation of the Anderson-Moore algorithm (SPAmalg).
+I have written a Mathematica program that creates a matlab executable file
+a MEX file for computing the
+Analytic mex reports the time required for computing the B matrix 1000 times.
+The fourth column presents  the second column  divided by column three.
+The fifth colum reports 
+the number of function evaluations required before the speed of the
+symbolic computing makes up for the overhead of
+computing the symbolic solution.
+\begin{gather*}
+  N=\frac{P}{t_N-t_S}
+\end{gather*}
+where $t_N$ is the time for the numeric computation of the $B$ matrix,
+$t_S$ is the time for the symbolic computation of the $B$ matrix, and
+$P$ is the time needed to compute the symbolic B matrix.
+]
+The table shows that for small linear models, 
+the analytic mex file is generally more than 100 times
+faster than the fastest matlab implementation for solving linear rational
+expectations models and that the time for computing the analytic is
+made up for by this speed in under a dozen function evaluations.
+
+
+%\input{../code/linCompMLB.tex}
+
+
+Table \ref{tab:nonLinTimes} shows times to compute solutions for non linear
+models. Non linear model computations require computation of the steady state.
+I recomputed steady states for both the analytic and the matlab linear 
+rational expectations solution.
+
+
+
+%\input{../code/nonLinearCompTimes.tex}
+
+Table \ref{tab:nonLinMexTime} shows that
+speedups are comparable to speedups for linear models. But since the 
+initial computation overhead for computing the solutions is larger, the
+breakeven number of function evaluations is also larger for non liner models.
+
+    
+With nonlinear models comes the added complication of linearizing these models.
+This can also typically be done using symbolic algebra.
+
+One has the choice of simplifying the symbolic algebra code. This can be
+time consuming or impossible.  The benefit may outweigh the cost.
+One can compare the susequent execution times with and without Simplification.
+
+
+%\input{../code/nonLinCompMLB.tex}
+<
+    
+  \end{frame}
+
+
+\begin{frame}
+  \frametitle{Anisotropic Grid Smolyak}
+\cite{Judd2013} describes a technique for improving the performance of
+the Smolyak method.
+\begin{itemize}
+\item Original select small proportion tensor product of complete grid to 
+approximate a multidimensional function.
+\item sparseGridEvalPolysAtPts[numVars\_Integer,approxLevel\_Integer,
+ptGenerator\_Function,polyGenerator\_Function] 
+\item sparseGridEvalPolysAtPts[listOfApproxLevels\_?ArrayQ,
+ptGenerator\_Function,polyGenerator\_Function] 
+\item chebyshevPolyGenerator::usage="chebyshevPolyGenerator[numPts\_Integer] generates chebyshev polynomials of the first kind with xx as the variable"
+\item chebyshevPtGenerator::usage="chebyshevPtGenerator"
+\item Other generators
+  \begin{itemize}
+  \item Isotropic 
+  \item Anisotropic
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Outputs}
+  \begin{itemize}
+  \item $\hat{f}(x;b)=\sum_{n=1}^M b_n \Psi_n(\chi)$
+  \item $
+    \begin{bmatrix}
+      f(\chi_1)\\ \cdots \\       f(\chi_M)
+    \end{bmatrix}=
+    % \begin{bmatrix}
+    %   \hat{f}(\chi_1)\\ \cdots \\       \hat{f}(\chi_M)
+    % \end{bmatrix}=
+      \begin{bmatrix}
+        \Psi_1(\chi_1) &\cdots &        \Psi_M(\chi_1)\\
+\vdots&\ddots&\cdots\\
+        \Psi_1(\chi_1)& \cdots   &      \Psi_M(\chi_1)
+      \end{bmatrix}
+      \begin{bmatrix}
+        b_1\\ \vdots \\ b_m
+      \end{bmatrix}= \mathcal{B} b
+$
+  \item The tuples of Smolyak grid points $\{\chi_1, \ldots , \chi_M\}$
+  \item The vector of polynomial basis functions $\{\Psi_1, \ldots , \Psi_M\}$ (alternatively as calls to chebyshev library)
+  \item The polynomials evaluated at the Smolyak grid points $\mathcal{B}$
+  \end{itemize}
+\end{frame}
+\begin{frame}
+  \frametitle{CodeGen}
+  \begin{itemize}
+  \item generate code for evaluating function at nodesa
+  \item for applying inverted the matrix to get weights 
+  \item for solving the linear system to get weights
+  \item evaluating function with computed weights
+  \item do for GPU, multicore, single core
+  \end{itemize}
+  Gener
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Log Linearization}
+  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Anisotropic Smolyak Code Generation}
+  
+\end{frame}
+\begin{frame}
+  \frametitle{Matlab Code Comparisons}
+  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Other Benefits}
+  \begin{itemize}
+  \item Promotes Testing
+  \item Eliminates Error Prone Tasks
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{sympy Applications}
+  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Impulse Response Functions}
+  
+\end{frame}
+
+
+\begin{frame}{MIT Hints}
+  \href{http://web.mit.edu/rsi/www/pdfs/beamer-tutorial.pdf}{mit beamer slide how to}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Bibliography}
+  \bibliographystyle{authordate4}
+\bibliography{anderson,files}
+
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Things to do}
+  \begin{itemize}
+\item Dynare incorporation
+\item XML applications
+  \begin{itemize}
+  \item description
+  \item application
+  \end{itemize}
+\item generate C and fortran
+\item multicore and GPU ( use smolyak for GPU ) Format smarter than Chebyshev libraries?  libraries GPU
+\item log linearization 
+\href{http://web.mit.edu/14.452/www/pdf/rbc.pdf}{RBC notes}
+\item judd maliar
+\item discontinuous smolyak
+\item anderson moore
+\item occassionally binding constraints
+\item continuous time
+\item other good Mma over the years? check github
+\item perturbation  rmat then balance or multicore
+\item power series for impulse response function
+\item symbollic function evaluated at grid points?
+\item GSM code /msu/scratch/m1gsa00/learnProjection/proto/authoritative/newGsmCode.mth
+\item<1>{this is overlay}\only<2->{aha}
+\item<2>{what do you know}
+\item<3>{what do you 3}
+\item<5>{what do you 5}
+\end{itemize}
+ \begin{itemize}
+      \item\only<1>{World peace}\only<2->{\sout{World peace}}
+      \item<2-> Peace in our neighbourhood
+    \end{itemize}
+\end{frame}
+
+
+
+\end{document}
