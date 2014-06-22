@@ -146,6 +146,11 @@ Error Free
   \begin{itemize}
   \item Model Definition Language
   \item Tool Application Language
+\item XML applications
+  \begin{itemize}
+  \item description
+  \item application
+  \end{itemize}
   \end{itemize}
 
   
@@ -181,6 +186,7 @@ Error Free
   \item GPU
   \item MPI
   \item $\ldots$
+\item multicore and GPU ( use smolyak for GPU ) Format smarter than Chebyshev libraries?  libraries GPU
     \end{itemize}
   \end{itemize}
 \end{itemize}
@@ -188,7 +194,13 @@ Error Free
 \end{frame}
 
 
-
+\begin{frame}
+  \frametitle{Targets}
+  \begin{itemize}
+  \item Dynare
+\item generate C and fortran
+  \end{itemize}
+\end{frame}
 
 \begin{frame}
   \frametitle{GPU Code Generation}
@@ -230,13 +242,20 @@ ptGenerator\_Function,polyGenerator\_Function]
 ptGenerator\_Function,polyGenerator\_Function] 
 \item chebyshevPolyGenerator::usage="chebyshevPolyGenerator[numPts\_Integer] generates chebyshev polynomials of the first kind with xx as the variable"
 \item chebyshevPtGenerator::usage="chebyshevPtGenerator"
+\end{itemize}
+}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Smolyak }
+  \begin{itemize}
+  \item \item discontinuous smolyak
 \item Other generators
   \begin{itemize}
   \item Isotropic 
   \item Anisotropic
   \end{itemize}
-\end{itemize}
-}
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -273,6 +292,7 @@ $
   \item evaluating function with computed weights
   \item do for GPU, multicore, single core
   \item Uses \mma  and  its Foermat and Optimize packages
+\item multicore and GPU ( use smolyak for GPU ) Format smarter than Chebyshev libraries?  libraries GPU
   \end{itemize}
   Gener
 \end{frame}
@@ -710,7 +730,16 @@ machines that code for us
   \end{itemize}
 \end{frame}
 
+ \begin{frame}
+   \frametitle{Future Directions}
+   \begin{itemize}
+ \item log linearization 
+ \href{http://web.mit.edu/14.452/www/pdf/rbc.pdf}{RBC notes}
+\item occassionally binding constraints
+\item continuous time
 
+\end{itemize}
+ \end{frame}
 
 
 \begin{frame}
@@ -718,47 +747,31 @@ machines that code for us
   \bibliographystyle{authordate4}
 \bibliography{anderson,files}
 
-
 \end{frame}
 
 
-\begin{frame}{MIT Hints}
-  \href{http://web.mit.edu/rsi/www/pdfs/beamer-tutorial.pdf}{mit beamer slide how to}
-\end{frame}
-\begin{frame}
+% \begin{frame}{MIT Hints}
+%   \href{http://web.mit.edu/rsi/www/pdfs/beamer-tutorial.pdf}{mit beamer slide how to}
+% \end{frame}
+% \begin{frame}
 
-  \frametitle{Things to do}
-  \begin{itemize}
-\item Dynare incorporation
-\item XML applications
-  \begin{itemize}
-  \item description
-  \item application
-  \end{itemize}
-\item generate C and fortran
-\item multicore and GPU ( use smolyak for GPU ) Format smarter than Chebyshev libraries?  libraries GPU
-\item log linearization 
-\href{http://web.mit.edu/14.452/www/pdf/rbc.pdf}{RBC notes}
-\item judd maliar
-\item discontinuous smolyak
-\item anderson moore
-\item occassionally binding constraints
-\item continuous time
-\item other good Mma over the years? check github
-\item perturbation  rmat then balance or multicore
-\item power series for impulse response function
-\item symbollic function evaluated at grid points?
-\item GSM code /msu/scratch/m1gsa00/learnProjection/proto/authoritative/newGsmCode.mth
-\item<1>{this is overlay}\only<2->{aha}
-\item<2>{what do you know}
-\item<3>{what do you 3}
-\item<5>{what do you 5}
-\end{itemize}
- \begin{itemize}
-      \item\only<1>{World peace}\only<2->{\sout{World peace}}
-      \item<2-> Peace in our neighbourhood
-    \end{itemize}
-\end{frame}
+%   \frametitle{Things to do}
+%   \begin{itemize}
+% \item other good Mma over the years? check github
+% \item perturbation  rmat then balance or multicore
+% \item power series for impulse response function
+% \item symbollic function evaluated at grid points?
+% \item GSM code /msu/scratch/m1gsa00/learnProjection/proto/authoritative/newGsmCode.mth
+% \item<1>{this is overlay}\only<2->{aha}
+% \item<2>{what do you know}
+% \item<3>{what do you 3}
+% \item<5>{what do you 5}
+% \end{itemize}
+%  \begin{itemize}
+%       \item\only<1>{World peace}\only<2->{\sout{World peace}}
+%       \item<2-> Peace in our neighbourhood
+%     \end{itemize}
+% \end{frame}
 
 
 
