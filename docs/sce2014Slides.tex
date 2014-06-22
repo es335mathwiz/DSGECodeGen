@@ -1,5 +1,7 @@
+%"C:\Program Files\Wolfram Research\Mathematica\9.0\math.exe"
 %\documentclass[pdf]{beamer}
 %set BIBINPUTS=.;../../bibFiles;;
+%set TEXINPUTS=.;../../texFiles;../../bibFiles;;
 \documentclass{beamer}
 \mode<presentation>{}
 \usepackage{beamerthemeshadow}
@@ -22,14 +24,14 @@
 % \usepackage{amssymb}
 % \usepackage{amsthm}
 % \usepackage{algorithmicx}
-% %\usepackage{program}
+%\usepackage{program}
 % \usepackage{rotating}
 \usepackage{ulem}
 \usepackage{authordate1-4}
 \input{someNewCommands}
 \begin{document}
-\title[Symbolic Algebra Code Generation]{\dsgecg: An Application of Symbolic Algebra to DSGE Estimation Code Generation}
-\subtitle{this is a subtitle}
+\title[Symbolic Algebra/XML and Code Generation]{\dsgecg: An Application of Symbolic Algebra and XML to DSGE Code Generation}
+%\subtitle{this is a subtitle}
 
 
 \author{Gary S. Anderson}
@@ -39,6 +41,104 @@
 \frame{\titlepage}
 
 
+\section{Overview}
+
+
+
+\begin{frame}
+  \frametitle{Overview}
+  
+  \begin{itemize}
+  \item \dsgecg\  Objectives and Components
+  \item XML for Model Definition and Manipulation
+  \item Symbolic Algebra for Code Generation
+  \item Examples
+    \begin{itemize}
+    \item Anisotropic Grid Smolyak
+    \item Anderson Moore Algorithm 
+    \end{itemize}
+  \item Future Directions
+  \end{itemize}
+\end{frame}
+
+\section{\dsgecg\  Objectives and Components}
+
+\begin{frame}
+  \frametitle{Objectives and Components}  
+
+{\small
+\begin{itemize}
+\item Apply Modern software development techniques 
+Symbolic Algebra Tools to Generate Portable Interoprable Compilable Code  Robust
+Error Free
+  \begin{itemize}
+  \item Automate Error Prone Tasks
+  \item Dynare other Personal Libraries
+  \item Interface Design
+  \item Open Source Tools  (sympy)  XML
+  \item Not replacement for Dynare or even personal Libraries
+  \item Target Languages
+  \item Interoperability and code sharing
+  \item promote specialization
+  \item object oriented ideas encapsulation
+  \item no side effects
+  \item Estimation and Simulation  Policy Analysis Forecasting
+  \end{itemize}
+\end{itemize}
+
+}
+\end{frame}
+\begin{frame}
+\frametitle{Share code by design}
+\begin{itemize}
+\item Software development and maintenance tools
+\item GitHub
+\item API's
+\item Think of sharing from the start
+\item Plug and play
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Other Benefits}
+  \begin{itemize}
+  \item reproducible results
+  \item design to evolve ( expect breakage )
+  \item Promotes Testing
+  \item Eliminates Error Prone Tasks
+  \item Division of labor and synergy  github
+  \item Forking can be a good thing
+  \end{itemize}
+\end{frame}
+
+
+
+
+\section{XML for  Model Definition and Manipulation}
+
+\begin{frame}
+  \frametitle{Star Concept}
+
+  \begin{itemize}
+  \item parse from language into some ``Abstract Syntax Tree'' (AST)
+  \item post process from AST to other useful forms
+  \item multiple parsers from
+  \item facilitate sharing code as well as ideas
+  \end{itemize}
+
+\end{frame}
+
+  \begin{frame}
+    \frametitle{Intermediate Model Representation}
+    \begin{itemize}
+    \item Map multiple languages into xml form
+    \item xml mapped into other languages or output
+    \item \LaTeX
+\item  Translation between model languages
+\item factor out model manipulation and application from description
+\item I chose XML open standard many free tools comprehensive perhaps too much so  XSL schema Xalan XSLT
+    \end{itemize}
+  \end{frame}
 
 
 \begin{frame}{XML }
@@ -51,15 +151,44 @@
   
 \end{frame}
 
-\begin{frame}
-  \frametitle{C Code Generation}
-  
-\end{frame}
 
 \begin{frame}
-  \frametitle{Fortran Code Generation}
-  
+  \frametitle{Anecdotes}
+  \begin{itemize}
+  \item Lex/Yacc/AIM  now  ANTLR
+  \end{itemize}
 \end{frame}
+
+
+\section{Symbolic Algebra for Code Generation}
+
+\begin{frame}
+  \frametitle{ Code Generation}
+  
+
+
+\begin{itemize}
+\item Standard widely compilable cross platform
+\item Fortran
+\item C
+\item MATLAB
+\item \LaTeX
+\item $\ldots$
+\item Evolve to more specific
+  \begin{itemize}
+  \item Parallel
+    \begin{itemize}
+  \item GPU
+  \item MPI
+  \item $\ldots$
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+
+
 
 \begin{frame}
   \frametitle{GPU Code Generation}
@@ -67,16 +196,128 @@
 \end{frame}
 
 
+\section{Examples}
 
-  \section{Problem Statement and Algorithm}
+
+\begin{frame}
+  \frametitle{gitHub Links for DSGECodeGen Software}
+  
+
+  \begin{itemize}
+  \item Package mathSmolyak` \href{https://github.com/es335mathwiz/AccelerateAMA.git}{https://github.com/es335mathwiz/AccelerateAMA.git}
+  \item Package Accelerate` \href{https://github.com/es335mathwiz/AccelerateAMA.git}{https://github.com/es335mathwiz/AccelerateAMA.git}
+  \item Package dsgeCodeGen` \href{https://github.com/es335mathwiz/dsgeCodeGen.git}{https://github.com/es335mathwiz/dsgeCodeGen.git}
+\end{itemize}
+
+\end{frame}
+
+
+
+\subsection{Anisotropic Grid Smolyak}
+
+
+\begin{frame}
+  \frametitle{Anisotropic Grid Smolyak}
+{\small
+\cite{Judd2013} describes a technique for improving the performance of
+the Smolyak method.
+\begin{itemize}
+\item Original select small proportion tensor product of complete grid to 
+approximate a multidimensional function.
+\item sparseGridEvalPolysAtPts[numVars\_Integer,approxLevel\_Integer,
+ptGenerator\_Function,polyGenerator\_Function] 
+\item sparseGridEvalPolysAtPts[listOfApproxLevels\_?ArrayQ,
+ptGenerator\_Function,polyGenerator\_Function] 
+\item chebyshevPolyGenerator::usage="chebyshevPolyGenerator[numPts\_Integer] generates chebyshev polynomials of the first kind with xx as the variable"
+\item chebyshevPtGenerator::usage="chebyshevPtGenerator"
+\item Other generators
+  \begin{itemize}
+  \item Isotropic 
+  \item Anisotropic
+  \end{itemize}
+\end{itemize}
+}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Outputs}
+  \begin{itemize}
+  \item $\hat{f}(x;b)=\sum_{n=1}^M b_n \Psi_n(\chi)$
+  \item $
+    \begin{bmatrix}
+      f(\chi_1)\\ \cdots \\       f(\chi_M)
+    \end{bmatrix}=
+    % \begin{bmatrix}
+    %   \hat{f}(\chi_1)\\ \cdots \\       \hat{f}(\chi_M)
+    % \end{bmatrix}=
+      \begin{bmatrix}
+        \Psi_1(\chi_1) &\cdots &        \Psi_M(\chi_1)\\
+\vdots&\ddots&\cdots\\
+        \Psi_1(\chi_1)& \cdots   &      \Psi_M(\chi_1)
+      \end{bmatrix}
+      \begin{bmatrix}
+        b_1\\ \vdots \\ b_m
+      \end{bmatrix}= \mathcal{B} b
+$
+  \item The tuples of Smolyak grid points $\{\chi_1, \ldots , \chi_M\}$
+  \item The vector of polynomial basis functions $\{\Psi_1, \ldots , \Psi_M\}$ (alternatively as calls to chebyshev library)
+  \item The polynomials evaluated at the Smolyak grid points $\mathcal{B}$
+  \end{itemize}
+\end{frame}
+\begin{frame}
+  \frametitle{CodeGen}
+  \begin{itemize}
+  \item generate code for evaluating function at nodesa
+  \item for applying inverted the matrix to get weights 
+  \item for solving the linear system to get weights
+  \item evaluating function with computed weights
+  \item do for GPU, multicore, single core
+  \item Uses \mma  and  its Foermat and Optimize packages
+  \end{itemize}
+  Gener
+\end{frame}
+
+
+
+\begin{frame}
+  \frametitle{Anisotropic Smolyak Code Generation}
+  
+  \begin{itemize}
+  \item Grid Specification
+  \item \mma
+  \end{itemize}
+  \begin{gather*}
+    f(x;\beta;\gamma)\\
+\pdrv{f}{\beta},\pdrv{f}{x}
+  \end{gather*}
+
+\end{frame}
+
+
+% \begin{frame}
+%   \frametitle{Log Linearization}
+  
+% \end{frame}
+
+% \begin{frame}
+%   \frametitle{Impulse Response Functions}
+  
+% \end{frame}
+
+
+
+
+\subsection{Anderson Moore Algorithm }
+
+  \subsubsection{Anderson Mooore Algorithm Problem Statement}
 
 
 \begin{frame}
   \frametitle{Problem Statement and Algorithm}
   
-  
+{\small  
 
-Consider linear models of the form:
+Consider linear models of the form\cite{anderson10}:
 
 
 \begin{gather}
@@ -87,6 +328,8 @@ of endogenous variables with}%\nonumber
 \lim_{ t \rightarrow\infty} \|x_t\|   < \infty\label{eq:limit} %\nonumber
 \end{gather}
 { and $z_t$ is a $k$ dimensional vector of exogenous variables.}
+
+}
 
 \end{frame}
 
@@ -109,7 +352,7 @@ a set of auxiliary initial conditions, $Z$ for the homogeneous solution.
     x_{-\tau}\\ \vdots \\ x_{\theta-1}
   \end{bmatrix}
 \end{gather}
-See Section~\ref{sec:arzgev}.
+
 \end{frame}
 \begin{frame}
 
@@ -121,13 +364,13 @@ large eigenvalues.
  V A =   \mathcal{M}  V 
 \end{gather}
 with the eigenvalues of $ \mathcal{M}$ all greater than one in absolute value.
-See Section~\ref{asymQ}.
+
 \end{frame}
 \begin{frame}
 
 
  Assembling asymptotic
-constraints, $Q$, (See Section~\ref{asymQ}.)  by combining the:
+constraints, $Q$,   by combining the:
   \begin{enumerate}
 \item  auxiliary initial conditions identified in the computation of the transition matrix and 
 \item the invariant space vectors
@@ -138,36 +381,36 @@ constraints, $Q$, (See Section~\ref{asymQ}.)  by combining the:
     Z\\V
   \end{bmatrix}
 \end{gather}
-See Section~\ref{asymQ}.
+
 \end{frame}
 \begin{frame}
  Investigating the rank of the linear space spanned by these asymptotic
 constraints and,  when a unique solution exists, 
 \begin{enumerate}
 \item Computing the auto-regressive 
-representation, $B$. See Section~\ref{conar}.
+representation, $B$. 
 \item Computing matrices, $\phi, F, \vartheta$ 
 for characterizing the impact of the inhomogeneous
-right hand side term. See Section~\ref{sec:inhomog}.
+right hand side term.
 
 \end{enumerate}
 \end{frame}
 
 
 
-\begin{frame}
-  \frametitle{Anderson Moore Algorithm Components}
-  \begin{itemize}
-  \item Package AccelerateAMA` \href{https://github.com/es335mathwiz/AccelerateAMA.git}{on gitHub}
+% \begin{frame}
+%   \frametitle{Anderson Moore Algorithm Components}
+%   \begin{itemize}
+%   \item Package AccelerateAMA` \href{https://github.com/es335mathwiz/AccelerateAMA.git}{on gitHub}
 
-\cite{anderson10}
+% \cite{anderson10}
 
-  \end{itemize}
-\end{frame}
+%   \end{itemize}
+% \end{frame}
 
 \begin{frame}
   
-  \subsection{A Simple Example}
+  \subsubsection{A Simple Example}
 Consider the model given by
   \begin{gather*}
     (1+r)v_t=v_{t+1}+ d_{t+1}\\
@@ -186,7 +429,7 @@ H=
 
 \begin{frame}
   
-  \subsection{Transition Matrix and Auxiliary Initial
+  \subsubsection{Transition Matrix and Auxiliary Initial
     Conditions}
 
 
@@ -241,7 +484,7 @@ V=      \begin{bmatrix}
 
 
 
-  \subsection{Assembling the Constraints and Computing the
+  \subsubsection{Assembling the Constraints and Computing the
     Autoregressive Representation}
  \begin{frame}
 The symbolic algebra implementation  combines the constraints
@@ -312,7 +555,7 @@ symbolic representation of a non-analytic steady state value.
 
   \begin{frame}
 
-    \subsection{The Models }
+    \subsubsection{The Models }
 As shown in table \ref{tab:noEst} the models vary in size and in the number of parameters used in their
 definition. Some of the models are nonlinear.
 
@@ -414,107 +657,61 @@ One can compare the susequent execution times with and without Simplification.
 
 
 %\input{../code/nonLinCompMLB.tex}
-<
+
     
   \end{frame}
 
-
-\begin{frame}
-  \frametitle{Anisotropic Grid Smolyak}
-\cite{Judd2013} describes a technique for improving the performance of
-the Smolyak method.
-\begin{itemize}
-\item Original select small proportion tensor product of complete grid to 
-approximate a multidimensional function.
-\item sparseGridEvalPolysAtPts[numVars\_Integer,approxLevel\_Integer,
-ptGenerator\_Function,polyGenerator\_Function] 
-\item sparseGridEvalPolysAtPts[listOfApproxLevels\_?ArrayQ,
-ptGenerator\_Function,polyGenerator\_Function] 
-\item chebyshevPolyGenerator::usage="chebyshevPolyGenerator[numPts\_Integer] generates chebyshev polynomials of the first kind with xx as the variable"
-\item chebyshevPtGenerator::usage="chebyshevPtGenerator"
-\item Other generators
-  \begin{itemize}
-  \item Isotropic 
-  \item Anisotropic
-  \end{itemize}
-\end{itemize}
-
-\end{frame}
-
-\begin{frame}
-  \frametitle{Outputs}
-  \begin{itemize}
-  \item $\hat{f}(x;b)=\sum_{n=1}^M b_n \Psi_n(\chi)$
-  \item $
-    \begin{bmatrix}
-      f(\chi_1)\\ \cdots \\       f(\chi_M)
-    \end{bmatrix}=
-    % \begin{bmatrix}
-    %   \hat{f}(\chi_1)\\ \cdots \\       \hat{f}(\chi_M)
-    % \end{bmatrix}=
-      \begin{bmatrix}
-        \Psi_1(\chi_1) &\cdots &        \Psi_M(\chi_1)\\
-\vdots&\ddots&\cdots\\
-        \Psi_1(\chi_1)& \cdots   &      \Psi_M(\chi_1)
-      \end{bmatrix}
-      \begin{bmatrix}
-        b_1\\ \vdots \\ b_m
-      \end{bmatrix}= \mathcal{B} b
-$
-  \item The tuples of Smolyak grid points $\{\chi_1, \ldots , \chi_M\}$
-  \item The vector of polynomial basis functions $\{\Psi_1, \ldots , \Psi_M\}$ (alternatively as calls to chebyshev library)
-  \item The polynomials evaluated at the Smolyak grid points $\mathcal{B}$
-  \end{itemize}
-\end{frame}
-\begin{frame}
-  \frametitle{CodeGen}
-  \begin{itemize}
-  \item generate code for evaluating function at nodesa
-  \item for applying inverted the matrix to get weights 
-  \item for solving the linear system to get weights
-  \item evaluating function with computed weights
-  \item do for GPU, multicore, single core
-  \end{itemize}
-  Gener
-\end{frame}
-
-
-\begin{frame}
-  \frametitle{Log Linearization}
-  
-\end{frame}
-
-\begin{frame}
-  \frametitle{Anisotropic Smolyak Code Generation}
-  
-\end{frame}
 \begin{frame}
   \frametitle{Matlab Code Comparisons}
   
 \end{frame}
 
-\begin{frame}
-  \frametitle{Other Benefits}
-  \begin{itemize}
-  \item Promotes Testing
-  \item Eliminates Error Prone Tasks
-  \end{itemize}
-\end{frame}
+
+
 
 \begin{frame}
   \frametitle{sympy Applications}
   
+  \begin{itemize}
+  \item Summer Intern Implementing AMA in python using sympy
+  \item All necessary components there
+    \begin{itemize}
+    \item QRDecomposition
+    \item LUDecomposition
+    \item Eigenvalue and Eigenvector  NullSpacen
+    \end{itemize}
+  \item Mathematica more comprehensive Matrix manipulation
+  \item Expect same bottle neck
+  \end{itemize}
 \end{frame}
+
+
+
+\section{Future Directions}
 
 \begin{frame}
-  \frametitle{Impulse Response Functions}
-  
+  \frametitle{Future Directions}
+  \begin{itemize}
+  \item Talking out of my experiences
+  \item Computers will someday write better code than we do
+  \item Job to accurately describe what we want  (declarative programming)
+  \item Symbolic, Functional and Logic programming may be useful Procedural
+a dead end
+\item Where are we computing
+\item playing nicely with fellow coders will be good practice for smart 
+machines that code for us
+  \item at present my website is not a good example of good practice
+    \begin{itemize}
+    \item Testing
+    \item Well defined API's
+    \item Examples
+    \item Predictable standardized Predictable Navigable structure
+    \end{itemize}
+  \end{itemize}
 \end{frame}
 
 
-\begin{frame}{MIT Hints}
-  \href{http://web.mit.edu/rsi/www/pdfs/beamer-tutorial.pdf}{mit beamer slide how to}
-\end{frame}
+
 
 \begin{frame}
   \frametitle{Bibliography}
@@ -524,7 +721,12 @@ $
 
 \end{frame}
 
+
+\begin{frame}{MIT Hints}
+  \href{http://web.mit.edu/rsi/www/pdfs/beamer-tutorial.pdf}{mit beamer slide how to}
+\end{frame}
 \begin{frame}
+
   \frametitle{Things to do}
   \begin{itemize}
 \item Dynare incorporation
