@@ -63,53 +63,80 @@
 
 \section{\dsgecg\  Objectives and Components}
 
-\begin{frame}
-  \frametitle{Objectives and Components}  
+\subsection{Objectives}
 
-{\small
+
+\begin{frame}
+  \frametitle{Objectives}  
+
+{%\small
 \begin{itemize}
-\item Apply Modern software development techniques 
-Symbolic Algebra Tools to Generate Portable Interoprable Compilable Code  Robust
-Error Free
+\item To facilitate  
+the production of  portable, interoperable, efficient, 
+ reliable and compilable code  for estimating,  
+simulating,  forecasting and  policy analysis with
+DSGE models.
   \begin{itemize}
-  \item Automate Error Prone Tasks
-  \item Dynare other Personal Libraries
-  \item Interface Design
-  \item Open Source Tools  (sympy)  XML
-  \item Not replacement for Dynare or even personal Libraries
-  \item Target Languages
-  \item Interoperability and code sharing
-  \item promote specialization
-  \item object oriented ideas encapsulation
-  \item no side effects
-  \item Estimation and Simulation  Policy Analysis Forecasting
+  \item Apply modern software development tools and techniques
+  \item Promote specialization and collaboration from the outset
+  \item Automate error prone tasks
+  \item Promote the provision of tests and examples
   \end{itemize}
 \end{itemize}
+}
+\end{frame}
+
+\subsection{Components}
+\begin{frame}
+  \frametitle{Components}  
+
+{\small
+  \begin{itemize}
+\item Symbolic algebra tools for manipulating model equations
+ -- currently \mma 
+\item XML for specifying model equations and 
+for specifying operations on the model
+\item The antlr parser generator for mapping alternative 
+model specification languages into  XML
+\item Explicit  API's for generated code
+\item gitHub for version control and code distribution
+  \end{itemize}
 
 }
 \end{frame}
-\begin{frame}
-\frametitle{Share code by design}
-\begin{itemize}
-\item Software development and maintenance tools
-\item GitHub
-\item API's
-\item Think of sharing from the start
-\item Plug and play
-\end{itemize}
-\end{frame}
 
 \begin{frame}
-  \frametitle{Other Benefits}
+  \frametitle{Targets}
+  
   \begin{itemize}
-  \item reproducible results
-  \item design to evolve ( expect breakage )
-  \item Promotes Testing
-  \item Eliminates Error Prone Tasks
-  \item Division of labor and synergy  github
-  \item Forking can be a good thing
+\item Target Languages
+    \begin{itemize}
+    \item Dynare
+    \item Matlab
+    \item Fortran
+    \item C
+    \item \LaTeX
+    \end{itemize}
+\item Target architectures
+  \begin{itemize}
+\item Ubiquitous multicore stand-alone machines
+  \item Increasingly available networked multicore machines
+  \item GPUs
+  \end{itemize}
+
   \end{itemize}
 \end{frame}
+
+% \begin{frame}
+%   \frametitle{Other Benefits}
+%   \begin{itemize}
+%   \item reproducible results
+%   \item design to evolve ( expect breakage )
+%   \item Promotes Testing
+%   \item Eliminates Error Prone Tasks
+%   \item Division of labor and synergy  github
+%   \end{itemize}
+% \end{frame}
 
 
 
@@ -119,7 +146,10 @@ Error Free
 \begin{frame}
   \frametitle{Star Concept}
 
+
+
   \begin{itemize}
+  \item What is XML, Schema, XSD, XSLT
   \item parse from language into some ``Abstract Syntax Tree'' (AST)
   \item post process from AST to other useful forms
   \item multiple parsers from
@@ -173,6 +203,9 @@ Error Free
 
 
 \begin{itemize}
+
+\item Currently using \mma
+\item Open Source Tools  sympy 
 \item Standard widely compilable cross platform
 \item Fortran
 \item C
@@ -217,8 +250,8 @@ Error Free
 
   \begin{itemize}
   \item Package mathSmolyak` \href{https://github.com/es335mathwiz/AccelerateAMA.git}{https://github.com/es335mathwiz/AccelerateAMA.git}
-  \item Package Accelerate` \href{https://github.com/es335mathwiz/AccelerateAMA.git}{https://github.com/es335mathwiz/AccelerateAMA.git}
-  \item Package dsgeCodeGen` \href{https://github.com/es335mathwiz/dsgeCodeGen.git}{https://github.com/es335mathwiz/dsgeCodeGen.git}
+  \item Package AccelerateAMA` \href{https://github.com/es335mathwiz/AccelerateAMA.git}{https://github.com/es335mathwiz/AccelerateAMA.git}
+  \item Package DSGECodeGen` \href{https://github.com/es335mathwiz/dsgeCodeGen.git}{https://github.com/es335mathwiz/dsgeCodeGen.git}
 \end{itemize}
 
 \end{frame}
@@ -690,7 +723,7 @@ One can compare the susequent execution times with and without Simplification.
 
 
 \begin{frame}
-  \frametitle{sympy Applications}
+  \frametitle{sympy}
   
   \begin{itemize}
   \item Summer Intern Implementing AMA in python using sympy
@@ -712,7 +745,9 @@ One can compare the susequent execution times with and without Simplification.
 \begin{frame}
   \frametitle{Future Directions}
   \begin{itemize}
+  \item Forking can be a good thing
   \item Talking out of my experiences
+  \item no side effects
   \item Computers will someday write better code than we do
   \item Job to accurately describe what we want  (declarative programming)
   \item Symbolic, Functional and Logic programming may be useful Procedural
@@ -737,7 +772,7 @@ machines that code for us
  \href{http://web.mit.edu/14.452/www/pdf/rbc.pdf}{RBC notes}
 \item occassionally binding constraints
 \item continuous time
-
+\item collaboration Michelle, ASabastein, Pablo, Chris
 \end{itemize}
  \end{frame}
 
