@@ -2,8 +2,13 @@
 %\documentclass[pdf]{beamer}
 %set BIBINPUTS=.;../../bibFiles;;
 %set TEXINPUTS=.;../../texFiles;../../bibFiles;;
-\documentclass{beamer}
+%pdflatex sce2014Slides
+\documentclass[tikz]{beamer}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
 \mode<presentation>{}
+\usepackage{pseudocode}
+\usepackage{dirtree}
 \usepackage{beamerthemeshadow}
 \usepackage[utf8]{inputenc}
 \usepackage{listings,xcolor}
@@ -14,7 +19,7 @@
 \usepackage{soul}
 %\usepackage{algorithmicx}
 %\usepackage{algpseudocode}
-\usepackage{pseudocode}
+%\usepackage{pseudocode}
 \usepackage{hyperref}
 % \usepackage{color}
 % \definecolor{light}{gray}{.80}
@@ -78,9 +83,9 @@ simulating,  forecasting and  policy analysis with
 DSGE models.
   \begin{itemize}
   \item Apply modern software development tools and techniques
-  \item Promote specialization and collaboration from the outset
+  \item Promote innovation/specialization and collaboration 
   \item Automate error prone tasks
-  \item Promote the provision of tests and examples
+  \item Promote the distribution of tests and examples
   \end{itemize}
 \end{itemize}
 }
@@ -93,13 +98,13 @@ DSGE models.
 {\small
   \begin{itemize}
 \item Symbolic algebra tools for manipulating model equations
- -- currently \mma 
-\item XML for specifying model equations and 
+ -- currently {\bf \mma}  ({\bf sympy} for the future)
+\item {\bf XML} for specifying model equations and 
 for specifying operations on the model
-\item The antlr parser generator for mapping alternative 
+\item The {\bf antlr} parser generator for mapping alternative 
 model specification languages into  XML
 \item Explicit  API's for generated code
-\item gitHub for version control and code distribution
+\item {\bf gitHub} for version control and code distribution
   \end{itemize}
 
 }
@@ -107,7 +112,10 @@ model specification languages into  XML
 
 \begin{frame}
   \frametitle{Targets}
-  
+  \begin{columns}
+    \begin{column}{.5\linewidth}
+      
+
   \begin{itemize}
 \item Target Languages
     \begin{itemize}
@@ -124,7 +132,31 @@ model specification languages into  XML
   \item GPUs
   \end{itemize}
 
+
   \end{itemize}
+\end{column}
+    \begin{column}{.5\linewidth}
+
+      \begin{itemize}
+      \item Directory Structure
+      \end{itemize}
+
+
+\dirtree{%
+.1 theRootDir.
+.2 code.
+.2 docs.
+.2 tests.
+.2 examples.
+}
+
+
+
+\end{column}
+
+  \end{columns}
+
+
 \end{frame}
 
 % \begin{frame}
@@ -145,54 +177,76 @@ model specification languages into  XML
 
 \begin{frame}
   \frametitle{Star Concept}
-
-
-
   \begin{itemize}
-  \item What is XML, Schema, XSD, XSLT
-  \item parse from language into some ``Abstract Syntax Tree'' (AST)
-  \item post process from AST to other useful forms
-  \item multiple parsers from
-  \item facilitate sharing code as well as ideas
+ \item Parse from language into an Intermediate Model Representation (IMR)
+ -- ``Abstract Syntax Tree'' 
+  \item Post process from IMR to other useful forms
+  \item Star concept --  multiple languages into and out of IMR
+    \begin{itemize}
+    \item \LaTeX outpput
+    \item Language translation
+    \item Code generation
+    \end{itemize}
+
+  \item Uses XML Schema, XSL tools
   \end{itemize}
 
 \end{frame}
 
-  \begin{frame}
-    \frametitle{Intermediate Model Representation}
-    \begin{itemize}
-    \item Map multiple languages into xml form
-    \item xml mapped into other languages or output
-    \item \LaTeX
-\item  Translation between model languages
-\item factor out model manipulation and application from description
-\item I chose XML open standard many free tools comprehensive perhaps too much so  XSL schema Xalan XSLT
-    \end{itemize}
-  \end{frame}
+\begin{frame}
+  \frametitle{Firm Value Example: Dynare}
+{\small
+\listinginput{1}{firmValue.mod}
+}
+\end{frame}
 
+\begin{frame}
+  \frametitle{Firm Value Example: XML}
+\listinginput{1}{firm.xml}
+\end{frame}
 
-\begin{frame}{XML }
-
-  \begin{itemize}
-  \item Model Definition Language
-  \item Tool Application Language
-\item XML applications
-  \begin{itemize}
-  \item description
-  \item application
-  \end{itemize}
-  \end{itemize}
-
+\begin{frame}
+  \frametitle{Firm Value Example: Mathematica}
+\listinginput{1}{firmValue.mth}
   
 \end{frame}
 
 
-\begin{frame}
-  \frametitle{Anecdotes}
-  \begin{itemize}
-  \item Lex/Yacc/AIM  now  ANTLR
-  \end{itemize}
-\end{frame}
+%   \begin{frame}
+%     \frametitle{Intermediate Model Representation}
+%     \begin{itemize}
+%     \item Map multiple languages into XML form
+%     \item XML mapped into other languages or output
+%     \item \LaTeX
+% \item  Translation between model languages
+% \item factor out model manipulation and application from description
+% \item I chose XML open standard many free tools comprehensive perhaps too much so  XSL schema Xalan XSLT
+%     \end{itemize}
+%   \end{frame}
+
+
+% \begin{frame}{XML }
+
+%   \begin{itemize}
+%   \item Model Definition Language
+%   \item Tool Application Language
+% \item XML applications
+%   \begin{itemize}
+%   \item description
+%   \item application
+%   \end{itemize}
+%   \end{itemize}
+
+  
+% \end{frame}
+
+
+% \begin{frame}
+%   \frametitle{Anecdotes}
+%   \begin{itemize}
+%   \item Lex/Yacc/AIM  now  ANTLR
+%   \end{itemize}
+% \end{frame}
 
 
 \section{Symbolic Algebra for Code Generation}
@@ -205,21 +259,24 @@ model specification languages into  XML
 \begin{itemize}
 
 \item Currently using \mma
-\item Open Source Tools  sympy 
-\item Standard widely compilable cross platform
+\item Changing to open source tool  sympy 
+\item Generating standard code compilable cross platform
+  \begin{itemize}
+ \item Dynare
 \item Fortran
 \item C
 \item MATLAB
 \item \LaTeX
-\item $\ldots$
-\item Evolve to more specific
+\item $\vdots$
+  \end{itemize}
+\item Will evolve to more specific
   \begin{itemize}
   \item Parallel
     \begin{itemize}
   \item GPU
   \item MPI
-  \item $\ldots$
-\item multicore and GPU ( use smolyak for GPU ) Format smarter than Chebyshev libraries?  libraries GPU
+  \item $\vdots$
+%\item multicore and GPU ( use smolyak for GPU ) Format smarter than Chebyshev libraries?  libraries GPU
     \end{itemize}
   \end{itemize}
 \end{itemize}
@@ -227,18 +284,18 @@ model specification languages into  XML
 \end{frame}
 
 
-\begin{frame}
-  \frametitle{Targets}
-  \begin{itemize}
-  \item Dynare
-\item generate C and fortran
-  \end{itemize}
-\end{frame}
+% \begin{frame}
+%   \frametitle{Targets}
+%   \begin{itemize}
+%   \item Dynare
+% \item generate C and fortran
+%   \end{itemize}
+% \end{frame}
 
-\begin{frame}
-  \frametitle{GPU Code Generation}
+% \begin{frame}
+%   \frametitle{GPU Code Generation}
   
-\end{frame}
+% \end{frame}
 
 
 \section{Examples}
@@ -248,11 +305,11 @@ model specification languages into  XML
   \frametitle{gitHub Links for DSGECodeGen Software}
   
 
-  \begin{itemize}
-  \item Package mathSmolyak` \href{https://github.com/es335mathwiz/AccelerateAMA.git}{https://github.com/es335mathwiz/AccelerateAMA.git}
-  \item Package AccelerateAMA` \href{https://github.com/es335mathwiz/AccelerateAMA.git}{https://github.com/es335mathwiz/AccelerateAMA.git}
-  \item Package DSGECodeGen` \href{https://github.com/es335mathwiz/dsgeCodeGen.git}{https://github.com/es335mathwiz/dsgeCodeGen.git}
-\end{itemize}
+  \begin{description}
+  \item[ \cite{Judd2013} Package mathSmolyak`] \href{https://github.com/es335mathwiz/AccelerateAMA.git}{https://github.com/es335mathwiz/AccelerateAMA.git}
+  \item[ \cite{anderson10} Package AccelerateAMA`] \href{https://github.com/es335mathwiz/AccelerateAMA.git}{https://github.com/es335mathwiz/AccelerateAMA.git}
+  \item[ Package DSGECodeGen` ]\href{https://github.com/es335mathwiz/dsgeCodeGen.git}{https://github.com/es335mathwiz/dsgeCodeGen.git}
+\end{description}
 
 \end{frame}
 
@@ -267,29 +324,27 @@ model specification languages into  XML
 \cite{Judd2013} describes a technique for improving the performance of
 the Smolyak method.
 \begin{itemize}
-\item Original select small proportion tensor product of complete grid to 
-approximate a multidimensional function.
-\item sparseGridEvalPolysAtPts[numVars\_Integer,approxLevel\_Integer,
+\item {\bf sparseGridEvalPolysAtPts}[numVars\_Integer,approxLevel\_Integer,
 ptGenerator\_Function,polyGenerator\_Function] 
-\item sparseGridEvalPolysAtPts[listOfApproxLevels\_?ArrayQ,
+\item {\bf sparseGridEvalPolysAtPts}[listOfApproxLevels\_?ArrayQ,
 ptGenerator\_Function,polyGenerator\_Function] 
-\item chebyshevPolyGenerator::usage="chebyshevPolyGenerator[numPts\_Integer] generates chebyshev polynomials of the first kind with xx as the variable"
-\item chebyshevPtGenerator::usage="chebyshevPtGenerator"
+\item {\bf chebyshevPolyGenerator}[numPts\_Integer] generates chebyshev polynomials of the first kind with xx as the variable"
+\item {\bf chebyshevPtGenerator}
 \end{itemize}
 }
 \end{frame}
 
-\begin{frame}
-  \frametitle{Smolyak }
-  \begin{itemize}
-  \item \item discontinuous smolyak
-\item Other generators
-  \begin{itemize}
-  \item Isotropic 
-  \item Anisotropic
-  \end{itemize}
-  \end{itemize}
-\end{frame}
+% \begin{frame}
+%   \frametitle{Smolyak }
+%   \begin{itemize}
+%   \item \item discontinuous smolyak
+% \item Other generators
+%   \begin{itemize}
+%   \item Isotropic 
+%   \item Anisotropic
+%   \end{itemize}
+%   \end{itemize}
+% \end{frame}
 
 \begin{frame}
   \frametitle{Outputs}
@@ -318,33 +373,33 @@ $
 \end{frame}
 \begin{frame}
   \frametitle{CodeGen}
+Generates code for 
+
   \begin{itemize}
-  \item generate code for evaluating function at nodesa
-  \item for applying inverted the matrix to get weights 
-  \item for solving the linear system to get weights
-  \item evaluating function with computed weights
-  \item do for GPU, multicore, single core
-  \item Uses \mma  and  its Foermat and Optimize packages
-\item multicore and GPU ( use smolyak for GPU ) Format smarter than Chebyshev libraries?  libraries GPU
+  \item Evaluating a user function at nodes
+  \item Solving the linear system to get weights
+  \item Evaluating function with computed weights
   \end{itemize}
-  Gener
+
+ Uses \mma\   and  its Format and Optimize packages
+
 \end{frame}
 
 
 
-\begin{frame}
-  \frametitle{Anisotropic Smolyak Code Generation}
+% \begin{frame}
+%   \frametitle{Anisotropic Smolyak Code Generation}
   
-  \begin{itemize}
-  \item Grid Specification
-  \item \mma
-  \end{itemize}
-  \begin{gather*}
-    f(x;\beta;\gamma)\\
-\pdrv{f}{\beta},\pdrv{f}{x}
-  \end{gather*}
+%   \begin{itemize}
+%   \item Grid Specification
+%   \item \mma
+%   \end{itemize}
+%   \begin{gather*}
+%     f(x;\beta;\gamma)\\
+% \pdrv{f}{\beta},\pdrv{f}{x}
+%   \end{gather*}
 
-\end{frame}
+% \end{frame}
 
 
 % \begin{frame}
@@ -606,118 +661,118 @@ symbolic representation of a non-analytic steady state value.
     \end{itemize}
   \end{frame}
 
-  \begin{frame}
+%   \begin{frame}
 
-    \subsubsection{The Models }
-As shown in table \ref{tab:noEst} the models vary in size and in the number of parameters used in their
-definition. Some of the models are nonlinear.
+%     \subsubsection{The Models }
+% As shown in table \ref{tab:noEst} the models vary in size and in the number of parameters used in their
+% definition. Some of the models are nonlinear.
 
-%\input{../code/modDims.tex}
+% %\input{../code/modDims.tex}
 
-  These nonlinear solutions have place holders for the steady state value.
-The Mathematica code linearizes nonlinear models about a symbolic steady state.
-Table \ref{tab:preEvalTimes} presents computation times for the steps
-preceeding the eigenvalue calculations.
-The symbolic algebra programs can deliver analytic solutions for
-each of the transition matrices. This includes 17 equation ifsi and and 14 equation fs2000ns which required
-about 3 minutes and a one half minute respectively. All the other models required less than a second.
-
-
-
-%\input{../code/preEvalTimes.tex}
+%   These nonlinear solutions have place holders for the steady state value.
+% The Mathematica code linearizes nonlinear models about a symbolic steady state.
+% Table \ref{tab:preEvalTimes} presents computation times for the steps
+% preceeding the eigenvalue calculations.
+% The symbolic algebra programs can deliver analytic solutions for
+% each of the transition matrices. This includes 17 equation ifsi and and 14 equation fs2000ns which required
+% about 3 minutes and a one half minute respectively. All the other models required less than a second.
 
 
 
-Symbolic algebra techniques deliver complete 
-analytic solutions for each of the linear
-models except for the BGGViegi model. 
-I set a maximum of ???one hour??? for each stage of the computation.
-For the BGGViegi model, the Eigenvector computation 
-step took more than an hour before aborting this and each of the subsequent 
-steps.  
-The machine is a 2.93GHz  24 core
-Intel(R) Xeon(R) CPU.\footnote{(peaklx13)}
-
-%\input{../code/ssSolnTimes.tex}
-
-%\input{../code/allCompTimes.tex}
-
-Table \ref{tab:linCompTimes} presents the time required to compute analytic 
-solutions. 
-The second column presents the time to compute the state space 
-transistion matrix, A. Column three presents the time required to determine
-the eigenvalues and eigenvectors that help characterize the asymptotic
-constraint matrix, Q. The fifth column presents the time required to
-compute the B matrix characterizing the linear rational expectation  model
-solution.  The sixth column characterizes the time required to compute
-the observable structure matrix, S.  
-
-FindRoot uses random numbers for variables not given by symbolic expression.
-On rare occasion these do not converge except for ifs1 and fs2000
- which often has convergence problems. 
-FindRoot solution times were always trivially small.
-
-%\input{../code/linearCompTimes.tex}
-
-Table \ref{tab:linMexTime} reports the number of seconds required for 1000 evaluations of
-the matlab implementation of the Anderson-Moore algorithm (SPAmalg).
-I have written a Mathematica program that creates a matlab executable file
-a MEX file for computing the
-Analytic mex reports the time required for computing the B matrix 1000 times.
-The fourth column presents  the second column  divided by column three.
-The fifth colum reports 
-the number of function evaluations required before the speed of the
-symbolic computing makes up for the overhead of
-computing the symbolic solution.
-\begin{gather*}
-  N=\frac{P}{t_N-t_S}
-\end{gather*}
-where $t_N$ is the time for the numeric computation of the $B$ matrix,
-$t_S$ is the time for the symbolic computation of the $B$ matrix, and
-$P$ is the time needed to compute the symbolic B matrix.
-]
-The table shows that for small linear models, 
-the analytic mex file is generally more than 100 times
-faster than the fastest matlab implementation for solving linear rational
-expectations models and that the time for computing the analytic is
-made up for by this speed in under a dozen function evaluations.
-
-
-%\input{../code/linCompMLB.tex}
-
-
-Table \ref{tab:nonLinTimes} shows times to compute solutions for non linear
-models. Non linear model computations require computation of the steady state.
-I recomputed steady states for both the analytic and the matlab linear 
-rational expectations solution.
+% %\input{../code/preEvalTimes.tex}
 
 
 
-%\input{../code/nonLinearCompTimes.tex}
+% Symbolic algebra techniques deliver complete 
+% analytic solutions for each of the linear
+% models except for the BGGViegi model. 
+% I set a maximum of ???one hour??? for each stage of the computation.
+% For the BGGViegi model, the Eigenvector computation 
+% step took more than an hour before aborting this and each of the subsequent 
+% steps.  
+% The machine is a 2.93GHz  24 core
+% Intel(R) Xeon(R) CPU.\footnote{(peaklx13)}
 
-Table \ref{tab:nonLinMexTime} shows that
-speedups are comparable to speedups for linear models. But since the 
-initial computation overhead for computing the solutions is larger, the
-breakeven number of function evaluations is also larger for non liner models.
+% %\input{../code/ssSolnTimes.tex}
 
-    
-With nonlinear models comes the added complication of linearizing these models.
-This can also typically be done using symbolic algebra.
+% %\input{../code/allCompTimes.tex}
 
-One has the choice of simplifying the symbolic algebra code. This can be
-time consuming or impossible.  The benefit may outweigh the cost.
-One can compare the susequent execution times with and without Simplification.
+% Table \ref{tab:linCompTimes} presents the time required to compute analytic 
+% solutions. 
+% The second column presents the time to compute the state space 
+% transistion matrix, A. Column three presents the time required to determine
+% the eigenvalues and eigenvectors that help characterize the asymptotic
+% constraint matrix, Q. The fifth column presents the time required to
+% compute the B matrix characterizing the linear rational expectation  model
+% solution.  The sixth column characterizes the time required to compute
+% the observable structure matrix, S.  
+
+% FindRoot uses random numbers for variables not given by symbolic expression.
+% On rare occasion these do not converge except for ifs1 and fs2000
+%  which often has convergence problems. 
+% FindRoot solution times were always trivially small.
+
+% %\input{../code/linearCompTimes.tex}
+
+% Table \ref{tab:linMexTime} reports the number of seconds required for 1000 evaluations of
+% the matlab implementation of the Anderson-Moore algorithm (SPAmalg).
+% I have written a Mathematica program that creates a matlab executable file
+% a MEX file for computing the
+% Analytic mex reports the time required for computing the B matrix 1000 times.
+% The fourth column presents  the second column  divided by column three.
+% The fifth colum reports 
+% the number of function evaluations required before the speed of the
+% symbolic computing makes up for the overhead of
+% computing the symbolic solution.
+% \begin{gather*}
+%   N=\frac{P}{t_N-t_S}
+% \end{gather*}
+% where $t_N$ is the time for the numeric computation of the $B$ matrix,
+% $t_S$ is the time for the symbolic computation of the $B$ matrix, and
+% $P$ is the time needed to compute the symbolic B matrix.
+% ]
+% The table shows that for small linear models, 
+% the analytic mex file is generally more than 100 times
+% faster than the fastest matlab implementation for solving linear rational
+% expectations models and that the time for computing the analytic is
+% made up for by this speed in under a dozen function evaluations.
 
 
-%\input{../code/nonLinCompMLB.tex}
+% %\input{../code/linCompMLB.tex}
+
+
+% Table \ref{tab:nonLinTimes} shows times to compute solutions for non linear
+% models. Non linear model computations require computation of the steady state.
+% I recomputed steady states for both the analytic and the matlab linear 
+% rational expectations solution.
+
+
+
+% %\input{../code/nonLinearCompTimes.tex}
+
+% Table \ref{tab:nonLinMexTime} shows that
+% speedups are comparable to speedups for linear models. But since the 
+% initial computation overhead for computing the solutions is larger, the
+% breakeven number of function evaluations is also larger for non liner models.
 
     
-  \end{frame}
+% With nonlinear models comes the added complication of linearizing these models.
+% This can also typically be done using symbolic algebra.
 
-\begin{frame}
-  \frametitle{Matlab Code Comparisons}
+% One has the choice of simplifying the symbolic algebra code. This can be
+% time consuming or impossible.  The benefit may outweigh the cost.
+% One can compare the susequent execution times with and without Simplification.
+
+
+% %\input{../code/nonLinCompMLB.tex}
+
+    
+%   \end{frame}
+
+% \begin{frame}
+%   \frametitle{Matlab Code Comparisons}
   
-\end{frame}
+% \end{frame}
 
 
 
@@ -745,37 +800,12 @@ One can compare the susequent execution times with and without Simplification.
 \begin{frame}
   \frametitle{Future Directions}
   \begin{itemize}
-  \item Forking can be a good thing
-  \item Talking out of my experiences
-  \item no side effects
-  \item Computers will someday write better code than we do
-  \item Job to accurately describe what we want  (declarative programming)
-  \item Symbolic, Functional and Logic programming may be useful Procedural
-a dead end
-\item Where are we computing
-\item playing nicely with fellow coders will be good practice for smart 
-machines that code for us
-  \item at present my website is not a good example of good practice
-    \begin{itemize}
-    \item Testing
-    \item Well defined API's
-    \item Examples
-    \item Predictable standardized Predictable Navigable structure
-    \end{itemize}
+  \item Employing sympy
+ \item Log linearization 
+\item Occassionally binding constraints
+\item Collaboration %Michelle, Sabastein, Pablo, Chris
   \end{itemize}
 \end{frame}
-
- \begin{frame}
-   \frametitle{Future Directions}
-   \begin{itemize}
- \item log linearization 
- \href{http://web.mit.edu/14.452/www/pdf/rbc.pdf}{RBC notes}
-\item occassionally binding constraints
-\item continuous time
-\item collaboration Michelle, ASabastein, Pablo, Chris
-\end{itemize}
- \end{frame}
-
 
 \begin{frame}
   \frametitle{Bibliography}
